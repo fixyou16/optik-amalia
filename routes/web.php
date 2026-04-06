@@ -50,3 +50,11 @@ Route::patch('/admin/orders/{id}/status', [AdminOrderController::class, 'updateS
     
     Route::delete('/admin/inventory/{id}', [InventoryController::class, 'destroy'])->name('admin.inventory.destroy');
 require __DIR__.'/auth.php';
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/setup-db', function() {
+    Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+    Artisan::call('storage:link');
+    return 'Database dan Folder Storage berhasil di-setup!';
+});
