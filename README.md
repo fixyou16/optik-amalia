@@ -1,4 +1,3 @@
-```
 # Optik Amalia 👓
 
 Sistem Informasi Manajemen dan Point of Sales (POS) khusus untuk Optik Amalia. Aplikasi ini dibangun menggunakan framework [Laravel](https://laravel.com) untuk mendigitalisasi dan memudahkan pengelolaan inventaris kacamata, lensa, data pelanggan, rekam medis mata, serta transaksi penjualan harian.
@@ -35,13 +34,6 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di *local environment
 1. **Clone repositori ini:**
    ```bash
    git clone [https://github.com/username-anda/optik-amalia.git](https://github.com/username-anda/optik-amalia.git)
-
-
-```
-
-
-
-
 
 
 1. **Masuk ke direktori proyek:**
