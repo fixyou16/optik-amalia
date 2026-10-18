@@ -1,6 +1,11 @@
 @extends('shop.layout')
 
 @section('content')
+@if(str_starts_with($product->description ?? '', '[DATA DEMO]'))
+<div class="alert alert-warning border-0 rounded-3 mb-4" role="status">
+    <strong>Produk DEMO.</strong> Harga dan stok hanya contoh, bukan harga atau persediaan asli. Foto bersifat ilustrasi. Verifikasi harga, ketersediaan, dan spesifikasi dengan Optik Amalia sebelum transaksi nyata.
+</div>
+@endif
 <div class="mb-3">
     <a href="{{ route('home') }}" class="text-decoration-none text-muted"><i class="bi bi-arrow-left"></i> Kembali ke Katalog</a>
 </div>
@@ -9,7 +14,7 @@
     <div class="row g-0">
         <!-- Kolom Gambar -->
         <div class="col-md-5 bg-light d-flex align-items-center justify-content-center p-4">
-            <img src="{{ $product->image ? asset('storage/'.$product->image) : 'https://placehold.co/600x400/e9ecef/495057?text=Kacamata' }}" class="img-fluid rounded shadow" alt="{{ $product->name }}" style="max-height: 400px; object-fit: contain;">
+            <img src="{{ $product->image ? (\Illuminate\Support\Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : asset('storage/'.$product->image)) : 'https://placehold.co/600x400/e9ecef/495057?text=Optik+Amalia' }}" class="img-fluid rounded shadow" alt="{{ $product->name }}{{ str_starts_with($product->description ?? '', '[DATA DEMO]') ? ' - foto ilustrasi demo' : '' }}" style="max-height: 400px; object-fit: contain;">
         </div>
         
         <!-- Kolom Info Produk -->
@@ -21,10 +26,15 @@
                 <div class="text-warning me-2">
                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
                 </div>
-                <span class="text-muted small">| Stok Tersedia: <strong>{{ $product->stock }} Pcs</strong></span>
+                <span class="text-muted small">| {{ str_starts_with($product->description ?? '', '[DATA DEMO]') ? 'Stok contoh (DEMO)' : 'Stok Tersedia' }}: <strong>{{ $product->stock }} Pcs</strong></span>
             </div>
 
-            <h1 class="text-primary fw-bold mb-4">Rp {{ number_format($product->price, 0, ',', '.') }}</h1>
+            <h1 class="text-primary fw-bold mb-2">Rp {{ number_format($product->price, 0, ',', '.') }}</h1>
+            @if(str_starts_with($product->description ?? '', '[DATA DEMO]'))
+                <p class="small text-muted mb-4">Harga ilustrasi DEMO — bukan harga jual terkonfirmasi.</p>
+            @else
+                <div class="mb-4"></div>
+            @endif
 
             <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Deskripsi Produk</h6>
             <p class="text-secondary" style="line-height: 1.8;">
