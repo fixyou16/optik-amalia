@@ -50,38 +50,3 @@ Route::patch('/admin/orders/{id}/status', [AdminOrderController::class, 'updateS
     
     Route::delete('/admin/inventory/{id}', [InventoryController::class, 'destroy'])->name('admin.inventory.destroy');
 require __DIR__.'/auth.php';
-
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-
-Route::get('/setup-db', function() {
-    // 1. Matikan batasan waktu eksekusi agar proses tidak terpotong
-    set_time_limit(0); 
-
-    try {
-        // 2. Cek koneksi database terlebih dahulu
-        DB::connection()->getPdo();
-        
-        // 3. Jalankan migrasi dan seeding secara paksa
-        Artisan::call('migrate:fresh', [
-            '--seed' => true, 
-            '--force' => true
-        ]);
-        
-        $outputMigrate = Artisan::output();
-
-        // 4. Jalankan storage link
-        Artisan::call('storage:link');
-        $outputStorage = Artisan::output();
-
-        return "<h1>BERHASIL! 🎉</h1>
-                <p><strong>Log Migrasi:</strong><br><pre>{$outputMigrate}</pre></p>
-                <p><strong>Log Storage:</strong><br><pre>{$outputStorage}</pre></p>
-                <a href='/' style='padding: 10px 20px; background: red; color: white; text-decoration: none; border-radius: 5px;'>Kembali ke Beranda</a>";
-
-    } catch (\Exception $e) {
-        return "<h1>GAGAL 🚨</h1>
-                <p><strong>Pesan Error:</strong> {$e->getMessage()}</p>
-                <p>Pastikan koneksi database di tab Variables Railway sudah benar.</p>";
-    }
-});

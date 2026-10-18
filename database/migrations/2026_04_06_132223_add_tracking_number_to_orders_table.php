@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
 {
     Schema::table('orders', function (Blueprint $table) {
-        $table->string('tracking_number')->nullable()->after('status'); // Kolom nomor resi
+        $table->string('tracking_number')->nullable(); // Kolom nomor resi
     });
 }
 
