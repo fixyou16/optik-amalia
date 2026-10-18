@@ -1,97 +1,150 @@
 # Optik Amalia 👓
 
-Sistem Informasi Manajemen dan Point of Sales (POS) khusus untuk Optik Amalia. Aplikasi ini dibangun menggunakan framework [Laravel](https://laravel.com) untuk mendigitalisasi dan memudahkan pengelolaan inventaris kacamata, lensa, data pelanggan, rekam medis mata, serta transaksi penjualan harian.
+Aplikasi web katalog dan pengelolaan toko optik yang dibangun menggunakan **Laravel 12**. Proyek ini menyediakan katalog produk, detail produk, keranjang belanja, checkout, autentikasi pengguna, serta halaman pengelolaan inventaris dan pesanan untuk admin.
 
-**🌐 Live Demo (Akses Lokal):** [http://127.0.0.1:8000/](http://127.0.0.1:8000/) *(Catatan: Server lokal harus dijalankan terlebih dahulu)*
+**🌐 Aplikasi live:** https://optik-amalia.dockhosting.dev/
 
-## 🚀 Fitur Utama
+> **Penting — katalog DEMO:** Katalog awal berisi produk ilustrasi untuk demonstrasi. Harga dan stoknya hanya contoh, bukan harga jual atau persediaan Optik Amalia yang terkonfirmasi. Gambar merupakan ilustrasi dan spesifikasi produk harus diverifikasi sebelum transaksi nyata.
 
-- **Manajemen Inventaris:** Pencatatan dan monitoring stok *frame* kacamata, lensa (berbagai jenis dan ukuran), serta aksesoris.
-- **Data Pelanggan & Resep:** Penyimpanan data pelanggan yang terintegrasi dengan riwayat resep ukuran kacamata (minus, plus, silinder, dll).
-- **Transaksi Penjualan (POS):** Sistem kasir digital untuk mencatat pesanan, memproses pembayaran, dan mencetak nota/struk.
-- **Laporan Keuangan:** Pembuatan laporan penjualan harian, mingguan, bulanan, serta laporan stok barang masuk dan keluar.
-- **Manajemen Pengguna:** Akses sistem dengan multi-peran (Admin, Kasir, Pemilik/Owner) dengan hak akses yang disesuaikan.
+## 🚀 Fitur
 
-## 🛠️ Teknologi yang Digunakan
+- **Katalog produk:** daftar produk dengan kategori dan pencarian.
+- **Lima kategori demo:** `frame`, `lensa`, `sunglasses`, `contact`, dan `accessories`.
+- **Detail produk:** gambar, deskripsi, harga, dan informasi stok.
+- **Keranjang dan checkout:** alur belanja berbasis sesi dan pembuatan pesanan.
+- **Akun pengguna:** autentikasi Laravel dan rute login Google yang disiapkan; login Google memerlukan konfigurasi OAuth yang valid.
+- **Inventaris admin:** tambah, ubah, lihat, dan hapus produk melalui area admin.
+- **Pengelolaan pesanan:** halaman admin untuk melihat dan memperbarui status pesanan.
+- **Ulasan produk:** dukungan rating dan komentar pelanggan.
+- **Seeder katalog demo:** dapat dijalankan berulang kali tanpa membuat duplikat untuk produk demo yang sudah ada.
 
-- **Backend:** Laravel (PHP)
-- **Database:** MySQL / MariaDB
-- **Frontend:** HTML, CSS, JavaScript
-- **Package Manager:** Composer & NPM
+> Fitur seperti laporan keuangan lengkap, pencetakan struk, atau rekam medis mata tidak dinyatakan tersedia dalam README ini kecuali sudah diimplementasikan dan diuji di aplikasi.
 
-## 📋 Prasyarat
+## 🛠️ Teknologi
 
-Pastikan komputer atau server Anda sudah terinstal:
-- PHP >= 8.1
+- **Backend:** PHP 8.2+ dan Laravel 12
+- **Frontend:** Blade, HTML, CSS, JavaScript, Vite
+- **Dependency:** Composer dan NPM
+- **Database:** PostgreSQL melalui Supabase pada deployment; konfigurasi database lokal dapat disesuaikan
+- **Deployment:** Docker, dengan PHP 8.3 dan Node.js 22 pada tahapan build
+
+## 📋 Prasyarat lokal
+
+Siapkan perangkat berikut:
+
+- PHP **8.2 atau lebih baru** beserta ekstensi yang dibutuhkan Laravel
 - Composer
-- MySQL atau MariaDB
-- Node.js & NPM (untuk kompilasi aset *frontend*)
+- Node.js dan NPM
+- Database yang didukung oleh konfigurasi Laravel (misalnya PostgreSQL atau MySQL)
 
-## ⚙️ Cara Instalasi
+## ⚙️ Menjalankan secara lokal
 
-Ikuti langkah-langkah berikut untuk menjalankan proyek ini di *local environment* Anda:
+### 1. Clone repository
 
-1. **Clone repositori ini:**
-   ```bash
-   git clone [https://github.com/username-anda/optik-amalia.git](https://github.com/username-anda/optik-amalia.git)
+```bash
+git clone https://github.com/fixyou16/optik-amalia.git
+cd optik-amalia
+```
 
+### 2. Instal dependensi
 
-1. **Masuk ke direktori proyek:**
+```bash
+composer install
+npm install
+npm run build
+```
 
-Bashcd optik-amalia
+### 3. Siapkan file environment
 
-2. **Instal dependensi PHP:**
+Salin `.env.example` menjadi `.env`.
 
-Bashcomposer install
+**Windows PowerShell:**
+```powershell
+Copy-Item .env.example .env
+```
 
-3. **Instal dependensi JavaScript/Node:**
+**Linux/macOS:**
+```bash
+cp .env.example .env
+```
 
-Bashnpm install && npm run build
+### 4. Buat application key
 
-4. **Siapkan environment file:** Salin file `.env.example` menjadi `.env`.
+```bash
+php artisan key:generate
+```
 
-Bashcp .env.example .env
+### 5. Konfigurasikan database
 
-5. **Generate *Application Key*:**
+Edit file `.env` dan masukkan pengaturan database lokal Anda. Contoh untuk PostgreSQL:
 
-Bashphp artisan key:generate
-
-6. **Konfigurasi Database:** Buka file `.env` dan sesuaikan kredensial database Anda:
-
-Cuplikan kodeDB_CONNECTION=mysql
-
+```dotenv
+DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
-
-DB_PORT=3306
-
+DB_PORT=5432
 DB_DATABASE=optik_amalia
+DB_USERNAME=postgres
+DB_PASSWORD=password_database_anda
+```
 
-DB_USERNAME=root
+Gunakan kredensial milik Anda sendiri. Jangan commit file `.env`, password, atau secret ke GitHub.
 
-DB_PASSWORD=
+### 6. Jalankan migrasi
 
-7. **Jalankan Migrasi dan Seeder (jika ada):**
+Pastikan database yang dipilih sudah dibuat dan dapat diakses, kemudian jalankan:
 
-Bashphp artisan migrate --seed
+```bash
+php artisan migrate
+```
 
-8. **Jalankan Server Lokal:**
+### 7. Tambahkan katalog demo (opsional)
 
-Bashphp artisan serve
+Untuk mengisi katalog contoh:
 
-Aplikasi sekarang dapat diakses melalui `http://127.0.0.1:8000/`.
+```bash
+php artisan db:seed --class=ProductSeeder
+```
 
+Seeder ini hanya menambahkan produk demo yang belum ada. Ia tidak memperbarui produk demo yang sudah ada, sehingga perubahan pada produk tersebut tidak ditimpa saat seeder dijalankan lagi.
 
+**Jangan menjalankan `php artisan db:seed` atau `php artisan migrate:fresh` secara sembarangan.** `DatabaseSeeder` pada repository ini membuat akun demo, sementara `migrate:fresh` menghapus seluruh tabel sebelum migrasi ulang. Jangan gunakan keduanya pada database produksi.
 
-## 🛡️ Keamanan (Vulnerabilities)
+### 8. Jalankan aplikasi
 
+```bash
+php artisan serve
+```
 
-Jika Anda menemukan celah keamanan dalam sistem ini, harap jangan membuat *issue* publik. Silakan laporkan langsung melalui email ke [email-anda@example.com](https://www.google.com/search?q=mailto%3Aemail-anda%40example.com).
+Buka http://127.0.0.1:8000/ di browser.
 
+## 🔐 Konfigurasi login Google
+
+Login Google memerlukan OAuth Client ID dan Client Secret dari Google Cloud Console serta redirect URI yang sesuai dengan rute callback aplikasi. Atur nilai rahasia melalui environment lokal atau pengaturan environment di penyedia hosting. **Jangan menaruh secret di repository atau README.**
+
+Untuk deployment, pastikan redirect URI yang didaftarkan di Google Cloud Console sama persis dengan URL callback aplikasi yang benar-benar digunakan.
+
+## 🚢 Deployment
+
+Aplikasi live tersedia di:
+
+https://optik-amalia.dockhosting.dev/
+
+Repository menggunakan Dockerfile untuk membangun aset frontend, memasang dependensi PHP, menjalankan migrasi, dan menjalankan `ProductSeeder` agar katalog demo tersedia. Seeder produk tidak sama dengan `DatabaseSeeder` dan tidak dibuat untuk mengisi akun demo.
+
+Sebelum menggunakan aplikasi untuk transaksi nyata:
+- Ganti katalog demo dengan produk, harga, dan stok yang sudah diverifikasi.
+- Pastikan konfigurasi database dan autentikasi di hosting benar.
+- Uji alur login, keranjang, checkout, dan pengelolaan pesanan.
+- Pastikan kebijakan backup dan keamanan database sudah diterapkan.
+
+## 🛡️ Pelaporan keamanan
+
+Jika menemukan kerentanan, jangan publikasikan kredensial, data pribadi, atau detail eksploitasi di issue publik. Hubungi maintainer repository secara privat melalui kanal GitHub yang tersedia.
 
 ## 📄 Lisensi
 
+Repository ini menyatakan penggunaan lisensi MIT. Lihat file [LICENSE](LICENSE) jika tersedia di repository.
 
-Proyek ini adalah perangkat lunak *open-source* yang dilisensikan di bawah [MIT license](https://opensource.org/licenses/MIT).
+---
 
-
-*Commit Hash Referensi:* `5bf6ffb683cc99057b96f3c0e5198a465f0028ac`
+Dikelola oleh [fixyou16](https://github.com/fixyou16).
