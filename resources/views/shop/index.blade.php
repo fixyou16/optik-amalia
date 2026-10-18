@@ -2,6 +2,12 @@
 
 @section('content')
 
+@if($products->contains(fn ($product) => str_starts_with($product->description ?? '', '[DATA DEMO]')))
+<div class="alert alert-warning border-0 rounded-3 mb-4" role="status">
+    <strong>Mode katalog DEMO.</strong> Harga dan stok yang ditampilkan hanya data contoh, bukan harga atau persediaan asli. Foto ilustrasi; spesifikasi produk perlu diverifikasi sebelum transaksi nyata.
+</div>
+@endif
+
 <!-- Banner Promo Amalia -->
 @if(!request('search') && !request('category'))
 <div class="row mb-5">
@@ -60,11 +66,14 @@
                 <div class="card product-card h-100 bg-white">
                     <!-- GAMBAR BISA DIKLIK -->
                     <a href="{{ route('product.show', $p->id) }}">
-                        <img src="{{ $p->image ? asset('storage/'.$p->image) : 'https://placehold.co/400x300/e9ecef/495057?text=Kacamata' }}" class="card-img-top p-2" alt="{{ $p->name }}" style="object-fit: cover; height: 180px;">
+                        <img src="{{ $p->image ? (\Illuminate\Support\Str::startsWith($p->image, ['http://', 'https://']) ? $p->image : asset('storage/'.$p->image)) : 'https://placehold.co/400x300/e9ecef/495057?text=Optik+Amalia' }}" class="card-img-top p-2" alt="{{ $p->name }}{{ str_starts_with($p->description ?? '', '[DATA DEMO]') ? ' - foto ilustrasi demo' : '' }}" loading="lazy" style="object-fit: cover; height: 180px;">
                     </a>
                     
                     <div class="card-body p-3 d-flex flex-column">
                         <small class="text-muted mb-1">{{ $p->category }}</small>
+                        @if(str_starts_with($p->description ?? '', '[DATA DEMO]'))
+                            <span class="badge text-bg-warning mb-2 align-self-start">DEMO • harga/stok contoh</span>
+                        @endif
                         
                         <!-- JUDUL BISA DIKLIK -->
                         <a href="{{ route('product.show', $p->id) }}" class="text-decoration-none text-dark">
@@ -93,7 +102,10 @@
                         </div>
                         
                         <div class="mt-auto">
-                            <div class="price-text mb-2">Rp {{ number_format($p->price, 0, ',', '.') }}</div>
+                            <div class="price-text mb-1">Rp {{ number_format($p->price, 0, ',', '.') }}</div>
+                            @if(str_starts_with($p->description ?? '', '[DATA DEMO]'))
+                                <small class="text-muted d-block mb-2">Harga ilustrasi • stok contoh: {{ $p->stock }}</small>
+                            @endif
                             
                             <!-- LOGIKA CEK LOGIN -->
                             @auth
