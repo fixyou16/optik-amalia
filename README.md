@@ -25,7 +25,7 @@ Aplikasi web katalog dan pengelolaan toko optik yang dibangun menggunakan **Lara
 - **Backend:** PHP 8.2+ dan Laravel 12
 - **Frontend:** Blade, HTML, CSS, JavaScript, Vite
 - **Dependency:** Composer dan NPM
-- **Database:** PostgreSQL melalui Supabase pada deployment; konfigurasi database lokal dapat disesuaikan
+- **Database:** PostgreSQL bawaan DockHosting untuk deployment; konfigurasi lokal dapat disesuaikan
 - **Deployment:** Docker, dengan PHP 8.3 dan Node.js 22 pada tahapan build
 
 ## 📋 Prasyarat lokal
@@ -76,7 +76,7 @@ php artisan key:generate
 
 ### 5. Konfigurasikan database
 
-Edit file `.env` dan masukkan pengaturan database lokal Anda. Contoh untuk PostgreSQL:
+Edit file `.env` dan masukkan pengaturan database lokal Anda. Untuk PostgreSQL lokal, sesuaikan host dan nama database. Contoh koneksi internal DockHosting untuk deployment ditampilkan pada bagian berikut.
 
 ```dotenv
 DB_CONNECTION=pgsql
@@ -124,6 +124,20 @@ Login Google memerlukan OAuth Client ID dan Client Secret dari Google Cloud Cons
 Untuk deployment, pastikan redirect URI yang didaftarkan di Google Cloud Console sama persis dengan URL callback aplikasi yang benar-benar digunakan.
 
 ## 🚢 Deployment
+
+Aplikasi menggunakan PostgreSQL internal DockHosting. Atur environment variables berikut pada pengaturan layanan aplikasi DockHosting (jangan masukkan password ke GitHub):
+
+```dotenv
+DB_CONNECTION=pgsql
+DB_HOST=db-toko-amalia-6ad42812
+DB_PORT=5432
+DB_DATABASE=toko-amalia
+DB_USERNAME=postgres
+DB_PASSWORD=<isi-password-dari-DockHosting>
+DB_SSLMODE=prefer
+```
+
+Pastikan aplikasi dan database berada pada jaringan/proyek DockHosting yang memungkinkan koneksi internal. Jangan gunakan host internal ini dari komputer lokal. Setelah environment variables disimpan, lakukan redeploy/restart aplikasi agar konfigurasi dibaca. Startup menjalankan migrasi biasa (`php artisan migrate --force`) dan seeder katalog demo; **jangan menjalankan `migrate:fresh` atau `DatabaseSeeder` pada database produksi**. Sebelum beralih dari Supabase, ekspor/backup data yang diperlukan dan migrasikan secara terencana—mengganti kredensial saja tidak memindahkan data.
 
 Aplikasi live tersedia di:
 
